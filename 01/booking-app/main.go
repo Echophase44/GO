@@ -1,25 +1,23 @@
 package main
 
 import (
+	"booking-app/helper"
 	"fmt"
 	"strings"
 )
 
 func main() {
 	var conferenceName = "Go Conference"
-	const conferenceTickets = 50
+	const conferenceTickets int = 50
 	var remainingTickets uint = 50
 
-	fmt.Printf("Welcome to %v booking application\n", conferenceName)
-	fmt.Printf("We have a total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
-	fmt.Println("Get your tickets here to attend.")
+	helper.PrintThisLine()
 
-	// var bookings = [50] string {"Nick", "Isla", "Beck"}
-	// The Array version:
-	// var bookings [50]string
+	greetUsers(conferenceName, conferenceTickets, remainingTickets)
 
-	//The Slice version:
 	var bookings []string
+
+	// bookingss := []string{}
 
 	for {
 		var firstName string
@@ -45,21 +43,16 @@ func main() {
 
 		if isValidEmail && isValidName && isValidTicketNumber {
 			remainingTickets = remainingTickets - userTickets
-			// Adding to specific postion in the Array: bookings[0] = firstName + " " + lastName
+
 			// Adding to the end of the Slice:
 			bookings = append(bookings, firstName+" "+lastName)
 
 			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, userEmail)
 			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
-			firstNames := []string{}
+			var allFirstNames = printFirstNames(bookings)
 
-			// the _ is a blank identifier, for a variable that won't be used, in this case, "index"
-			for _, user := range bookings {
-				var names = strings.Fields(user)
-				firstNames = append(firstNames, names[0])
-			}
-			fmt.Printf("Bookings made by: %v\n", firstNames)
+			fmt.Printf("The first names of booking are: %v\n", allFirstNames)
 
 			if remainingTickets == 0 {
 				fmt.Println("Our conference is booked out. Come back next year.")
@@ -77,4 +70,22 @@ func main() {
 			}
 		}
 	}
+}
+
+func greetUsers(user string, confTickets int, remainingTickets uint) {
+	fmt.Printf("Welcome to our conference %v!\n", user)
+	fmt.Printf("We have a total of %v tickets and %v are still available\n", confTickets, remainingTickets)
+	fmt.Println("Get your tickets here to attend.")
+}
+
+// the []string after the () is the return value that we have to specify
+func printFirstNames(bookings []string) []string {
+	firstNames := []string{}
+
+	// the _ is a blank identifier, for a variable that won't be used, in this case, "index"
+	for _, user := range bookings {
+		var names = strings.Fields(user)
+		firstNames = append(firstNames, names[0])
+	}
+	return firstNames
 }
