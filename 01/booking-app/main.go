@@ -3,8 +3,18 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
+	"strconv"
 	"strings"
 )
+
+var bookings = make([]map[string]string, 0)
+
+type SUserData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
 
 func main() {
 	var conferenceName = "Go Conference"
@@ -14,8 +24,6 @@ func main() {
 	helper.PrintThisLine()
 
 	greetUsers(conferenceName, conferenceTickets, remainingTickets)
-
-	var bookings []string
 
 	// bookingss := []string{}
 
@@ -44,13 +52,19 @@ func main() {
 		if isValidEmail && isValidName && isValidTicketNumber {
 			remainingTickets = remainingTickets - userTickets
 
+			var userData = make(map[string]string)
+			userData["firstName"] = firstName
+			userData["lastName"] = lastName
+			userData["email"] = userEmail
+			userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
 			// Adding to the end of the Slice:
-			bookings = append(bookings, firstName+" "+lastName)
+			bookings = append(bookings, userData)
 
 			fmt.Printf("Thank you %v %v for booking %v tickets. You will receive a confirmation email at %v\n", firstName, lastName, userTickets, userEmail)
 			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
-			var allFirstNames = printFirstNames(bookings)
+			var allFirstNames = printFirstNames()
 
 			fmt.Printf("The first names of booking are: %v\n", allFirstNames)
 
@@ -79,13 +93,10 @@ func greetUsers(user string, confTickets int, remainingTickets uint) {
 }
 
 // the []string after the () is the return value that we have to specify
-func printFirstNames(bookings []string) []string {
+func printFirstNames() []string {
 	firstNames := []string{}
-
-	// the _ is a blank identifier, for a variable that won't be used, in this case, "index"
 	for _, user := range bookings {
-		var names = strings.Fields(user)
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, user["firstName"])
 	}
 	return firstNames
 }
